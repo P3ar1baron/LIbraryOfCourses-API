@@ -1,2 +1,2 @@
 # LibraryOfCourses-API
-API for Library of Courses
+ASP.NET Core RESTful API for Library of Courses
