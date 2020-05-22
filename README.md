@@ -1,2 +1,2 @@
-# LIbraryOfCourses-API
+# LibraryOfCourses-API
 API for Library of Courses
