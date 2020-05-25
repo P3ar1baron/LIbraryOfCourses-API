@@ -5,6 +5,7 @@ using System;
 namespace LibraryOfCourses.API.Controllers
 {
     [ApiController]
+    [Route("api/authors")]
     public class AuthorsController : ControllerBase
     {
         private readonly ICourseLibraryRepository _courseLibraryRepository;
@@ -15,6 +16,7 @@ namespace LibraryOfCourses.API.Controllers
                 throw new ArgumentNullException(nameof(courseLibraryRepository));
         }
 
+        [HttpGet()]
         public IActionResult GetAuthors()
         {
             var authorsFromRepo = _courseLibraryRepository.GetAuthors();
