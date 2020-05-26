@@ -27,7 +27,7 @@ namespace LibraryOfCourses.API.Controllers
         public ActionResult<IEnumerable<AuthorDto>> GetAuthors()
         {
             var authorsFromRepo = _courseLibraryRepository.GetAuthors();
-            return  Ok(authorsFromRepo);
+            return  Ok(_mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo));
         }
 
         [HttpGet("{authorId:guid}")]
@@ -40,7 +40,7 @@ namespace LibraryOfCourses.API.Controllers
                 return NotFound();
             }
 
-            return  Ok(authorFromRepo);
+            return  Ok(_mapper.Map<AuthorDto>(authorFromRepo));
         }
     }
 }
