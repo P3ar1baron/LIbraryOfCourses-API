@@ -122,6 +122,7 @@ namespace CourseLibrary.API.Services
             return _context.Authors.ToList<Author>();
         }
 
+        //filtering
         public IEnumerable<Author> GetAuthors(string mainCategory)
         {
             if (string.IsNullOrWhiteSpace(mainCategory))
