@@ -29,7 +29,7 @@ namespace LibraryOfCourses.API.Controllers
         public ActionResult<IEnumerable<AuthorDto>> GetAuthors(
              AuthorsResourceParameters authorsResourceParameters)
         {
-            var authorsFromRepo = _courseLibraryRepository.GetAuthors(mainCategory,searchQuery);
+            var authorsFromRepo = _courseLibraryRepository.GetAuthors(authorsResourceParameters);
             return  Ok(_mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo));
         }
 
