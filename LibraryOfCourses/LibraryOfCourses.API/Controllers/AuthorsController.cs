@@ -47,9 +47,9 @@ namespace LibraryOfCourses.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult<AuthorDto> CreateAuthor()
+        public ActionResult<AuthorDto> CreateAuthor(AuthorForCreationDto author)
         {
-
+            
         }
     }
 }
