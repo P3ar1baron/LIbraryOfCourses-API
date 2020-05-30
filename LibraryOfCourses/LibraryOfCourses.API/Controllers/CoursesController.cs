@@ -54,5 +54,12 @@ namespace LibraryOfCourses.API.Controllers
 
             return Ok(_mapper.Map<CourseDto>(courseForAuthorFromRepo));
         }
+
+        [HttpPost]
+        public ActionResult<CourseDto> CreateCourseForAuthor(
+            Guid authorId, )
+        {
+
+        }
     }
 }
