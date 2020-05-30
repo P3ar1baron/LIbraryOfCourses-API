@@ -70,7 +70,8 @@ namespace LibraryOfCourses.API.Controllers
 
             var courseToReturn = _mapper.Map<CourseDto>(courseEntity);
             return CreatedAtRoute("GetCourseForAuthor",
-                new { authorId = authorId, courseId = courseToReturn.Id }, courseToReturn);
+                new { authorId = authorId, courseId = courseToReturn.Id }, 
+                courseToReturn);
 
         }
     }
