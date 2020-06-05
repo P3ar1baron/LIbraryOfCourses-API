@@ -13,6 +13,6 @@ namespace LibraryOfCourses.API.Models
 
         [Required(ErrorMessage = "You should fill out a description.")]
         [MaxLength(500, ErrorMessage = "The description shouldn't have more than 500 characters.")]
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
     }
 }
