@@ -132,6 +132,18 @@ namespace LibraryOfCourses.API.Controllers
             {
                 return NotFound();
             }
+
+            var courseToPatch = _mapper.Map <CourseForUpdateDto>(courseFromAuthorRepo);
+            //add validation
+            patchDocument.ApplyTo(courseToPatch);
+
+            _mapper.Map(courseToPatch, courseFromAuthorRepo);
+
+            _courseLibraryRepository.UpdateCourse(courseFromAuthorRepo);
+
+            _courseLibraryRepository.Save();
+
+            return NoContent();
         }
     }
 }
