@@ -99,6 +99,9 @@ namespace LibraryOfCourses.API.Controllers
 
             _courseLibraryRepository.UpdateCourse(courseForAuthorFromRepo);
 
+            _courseLibraryRepository.Save();
+
+            return NoContent();
         }
     }
 }
