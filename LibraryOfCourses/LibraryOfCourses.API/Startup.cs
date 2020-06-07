@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,30 +31,30 @@ namespace CourseLibrary.API
             {
                 setupAction.ReturnHttpNotAcceptable = true;
 
-            }).AddXmlDataContractSerializerFormatters()
-            .AddNewtonsoftJson(setupAction =>
+            }).AddNewtonsoftJson(setupAction =>
             {
                 setupAction.SerializerSettings.ContractResolver =
-                    new CamelCasePropertyNamesContractResolver();
+                   new CamelCasePropertyNamesContractResolver();
             })
+             .AddXmlDataContractSerializerFormatters()
             .ConfigureApiBehaviorOptions(setupAction =>
             {
                 setupAction.InvalidModelStateResponseFactory = context =>
                 {
-                    //create a problem details object
+                    // create a problem details object
                     var problemDetailsFactory = context.HttpContext.RequestServices
-                    .GetRequiredService<ProblemDetailsFactory>();
+                        .GetRequiredService<ProblemDetailsFactory>();
                     var problemDetails = problemDetailsFactory.CreateValidationProblemDetails(
-                        context.HttpContext,
-                        context.ModelState);
+                            context.HttpContext,
+                            context.ModelState);
 
-                    //add additional info not added by default
+                    // add additional info not added by default
                     problemDetails.Detail = "See the errors field for details.";
                     problemDetails.Instance = context.HttpContext.Request.Path;
 
-                    //find out which status code to use
+                    // find out which status code to use
                     var actionExecutingContext =
-                            context as Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext;
+                          context as Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext;
 
                     // if there are modelstate errors & all keys were correctly
                     // found/parsed we're dealing with validation errors
@@ -93,15 +92,37 @@ namespace CourseLibrary.API
             });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-             
+
             services.AddScoped<ICourseLibraryRepository, CourseLibraryRepository>();
 
             services.AddDbContext<CourseLibraryContext>(options =>
             {
                 options.UseSqlServer(
                     @"Server=(localdb)\mssqllocaldb;Database=CourseLibraryDB;Trusted_Connection=True;");
-            }); 
+            });
         }
+
+
+        internal static IActionResult ProblemDetailsInvalidModelStateResponse(
+            ProblemDetailsFactory problemDetailsFactory, ActionContext context)
+        {
+            var problemDetails = problemDetailsFactory.CreateValidationProblemDetails(context.HttpContext, context.ModelState);
+            ObjectResult result;
+            if (problemDetails.Status == 400)
+            {
+                // For compatibility with 2.x, continue producing BadRequestObjectResult instances if the status code is 400.
+                result = new BadRequestObjectResult(problemDetails);
+            }
+            else
+            {
+                result = new ObjectResult(problemDetails);
+            }
+            result.ContentTypes.Add("application/problem+json");
+            result.ContentTypes.Add("application/problem+xml");
+
+            return result;
+        }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -117,9 +138,10 @@ namespace CourseLibrary.API
                     appBuilder.Run(async context =>
                     {
                         context.Response.StatusCode = 500;
-                        await context.Response.WriteAsync("An unexpected fault happened.Try again later");
+                        await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
                     });
                 });
+
             }
 
             app.UseRouting();
