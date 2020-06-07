@@ -135,7 +135,12 @@ namespace LibraryOfCourses.API.Controllers
 
             var courseToPatch = _mapper.Map <CourseForUpdateDto>(courseFromAuthorRepo);
             //add validation
-            patchDocument.ApplyTo(courseToPatch);
+            patchDocument.ApplyTo(courseToPatch, ModelState);
+
+            if(!TryValidateModel(courseToPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
 
             _mapper.Map(courseToPatch, courseFromAuthorRepo);
 
