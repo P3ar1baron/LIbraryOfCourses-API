@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:51082",
+      "applicationUrl": "http://localhost:51085",
       "sslPort": 0
     }
   },
@@ -15,7 +15,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:51082"
+      "applicationUrl": "http://localhost:51085"
     },
     "LibraryOfCourses.API": {
       "commandName": "Project",
@@ -24,7 +24,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:51082"
+      "applicationUrl": "http://localhost:51085"
     }
   }
 }
