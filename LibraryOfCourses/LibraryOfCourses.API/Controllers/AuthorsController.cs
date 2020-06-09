@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CourseLibrary.API.Services;
+using LibraryOfCourses.API.Helpers;
 using LibraryOfCourses.API.Models;
 using LibraryOfCourses.API.ResourceParameters;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ namespace LibraryOfCourses.API.Controllers
                 throw new ArgumentNullException(nameof(mapper));
         }
 
-        [HttpGet()]
+        [HttpGet(Name ="GetAuthors")]
         [HttpHead]
         public ActionResult<IEnumerable<AuthorDto>> GetAuthors(
              [FromQuery] AuthorsResourceParameters authorsResourceParameters)
@@ -82,6 +83,43 @@ namespace LibraryOfCourses.API.Controllers
             _courseLibraryRepository.Save();
 
             return NoContent();
+        }
+
+        private string CreateAuthorsResourceUri(
+           AuthorsResourceParameters authorsResourceParameters,
+           ResourceUriType type)
+        {
+            switch (type)
+            {
+                case ResourceUriType.PreviousPage:
+                    return Url.Link("GetAuthors",
+                      new
+                      {
+                          pageNumber = authorsResourceParameters.PageNumber - 1,
+                          pageSize = authorsResourceParameters.PageSize,
+                          mainCategory = authorsResourceParameters.MainCategory,
+                          searchQuery = authorsResourceParameters.SearchQuery
+                      });
+                case ResourceUriType.NextPage:
+                    return Url.Link("GetAuthors",
+                      new
+                      {
+                          pageNumber = authorsResourceParameters.PageNumber + 1,
+                          pageSize = authorsResourceParameters.PageSize,
+                          mainCategory = authorsResourceParameters.MainCategory,
+                          searchQuery = authorsResourceParameters.SearchQuery
+                      });
+
+                default:
+                    return Url.Link("GetAuthors",
+                    new
+                    {
+                        pageNumber = authorsResourceParameters.PageNumber,
+                        pageSize = authorsResourceParameters.PageSize,
+                        mainCategory = authorsResourceParameters.MainCategory,
+                        searchQuery = authorsResourceParameters.SearchQuery
+                    });
+            }
         }
     }
 }
