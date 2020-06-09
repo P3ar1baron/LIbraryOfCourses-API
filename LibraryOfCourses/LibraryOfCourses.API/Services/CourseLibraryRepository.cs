@@ -152,6 +152,7 @@ namespace CourseLibrary.API.Services
             //implement pagination
             return collection
                 .Skip(authorsResourceParameters.PageSize * (authorsResourceParameters.PageNumber -1))
+                .Take(authorsResourceParameters.PageSize)
                 .ToList();
         }
 
