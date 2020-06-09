@@ -150,6 +150,14 @@ namespace CourseLibrary.API.Services
                || a.LastName.Contains(searchQuery));
             }
 
+            if (!string.IsNullOrWhiteSpace(authorsResourceParameters.OrderBy))
+            {
+                if (authorsResourceParameters.OrderBy.ToLowerInvariant() == "name")
+                {
+                    collection = collection.OrderBy(a => a.FirstName).ThenBy(a => a.LastName);
+                }
+            }
+
             //implement pagination
             return PagedList<Author>.Create(collection,
                 authorsResourceParameters.PageNumber,
