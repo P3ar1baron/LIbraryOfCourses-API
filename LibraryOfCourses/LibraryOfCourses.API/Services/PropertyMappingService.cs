@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LibraryOfCourses.API.Services
 {
-    public class PropertyMappingService
+    public class PropertyMappingService : IPropertyMappingService
     {
         private Dictionary<string, PropertyMappingValue> _authorPropertyMapping =
           new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
@@ -28,7 +28,17 @@ namespace LibraryOfCourses.API.Services
         public Dictionary<string, PropertyMappingValue> GetPropertyMapping
             <TSource, TDestination>()
         {
+            // get matching mapping
+            var matchingMapping = _propertyMappings
+                .OfType<PropertyMapping<TSource, TDestination>>();
 
+            if (matchingMapping.Count() == 1)
+            {
+                return matchingMapping.First()._mappingDictionary;
+            }
+
+            throw new Exception($"Cannot find exact property mapping instance " +
+                $"for <{typeof(TSource)},{typeof(TDestination)}");
         }
     }
 }

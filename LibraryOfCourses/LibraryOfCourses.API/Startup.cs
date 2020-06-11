@@ -1,6 +1,7 @@
 using AutoMapper;
 using CourseLibrary.API.DbContexts;
 using CourseLibrary.API.Services;
+using LibraryOfCourses.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -90,6 +91,9 @@ namespace CourseLibrary.API
                     };
                 };
             });
+
+            //register PropertyMappingService
+            services.AddTransient<IPropertyMappingService, PropertyMappingService>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
