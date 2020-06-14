@@ -3,6 +3,7 @@ using CourseLibrary.API.Services;
 using LibraryOfCourses.API.Helpers;
 using LibraryOfCourses.API.Models;
 using LibraryOfCourses.API.ResourceParameters;
+using LibraryOfCourses.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -16,14 +17,17 @@ namespace LibraryOfCourses.API.Controllers
     {
         private readonly ICourseLibraryRepository _courseLibraryRepository;
         private readonly IMapper _mapper;
+        private readonly IPropertyMappingService _propertyMappingService;
 
         public AuthorsController(ICourseLibraryRepository courseLibraryRepository,
-            IMapper mapper)
+            IMapper mapper, IPropertyMappingService propertyMappingService)
         {
             _courseLibraryRepository = courseLibraryRepository ??
                 throw new ArgumentNullException(nameof(courseLibraryRepository));
             _mapper = mapper ??
                 throw new ArgumentNullException(nameof(mapper));
+            _propertyMappingService = propertyMappingService ??
+              throw new ArgumentNullException(nameof(propertyMappingService));
         }
 
         [HttpGet(Name ="GetAuthors")]
@@ -31,6 +35,12 @@ namespace LibraryOfCourses.API.Controllers
         public ActionResult<IEnumerable<AuthorDto>> GetAuthors(
              [FromQuery] AuthorsResourceParameters authorsResourceParameters)
         {
+            if (!_propertyMappingService.ValidMappingExistsFor<AuthorDto, CourseLibrary.API.Entities.Author>
+                (authorsResourceParameters.OrderBy))
+            {
+                return BadRequest();
+            }
+
             var authorsFromRepo = _courseLibraryRepository.GetAuthors(authorsResourceParameters);
 
             var previousPageLink = authorsFromRepo.HasPrevious ?
