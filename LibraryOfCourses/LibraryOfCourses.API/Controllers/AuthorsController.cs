@@ -46,6 +46,12 @@ namespace LibraryOfCourses.API.Controllers
                 return BadRequest();
             }
 
+            if (!_propertyCheckerService.TypeHasProperties<AuthorDto>
+              (authorsResourceParameters.Fields))
+            {
+                return BadRequest();
+            }
+
             var authorsFromRepo = _courseLibraryRepository.GetAuthors(authorsResourceParameters);
 
             var previousPageLink = authorsFromRepo.HasPrevious ?
@@ -75,6 +81,12 @@ namespace LibraryOfCourses.API.Controllers
         [HttpGet("{authorId:guid}", Name = "GetAuthor")]
         public IActionResult GetAuthor(Guid authorId, string fields)
         {
+            if (!_propertyCheckerService.TypeHasProperties<AuthorDto>
+               (fields))
+            {
+                return BadRequest();
+            }
+
             var authorFromRepo = _courseLibraryRepository.GetAuthor(authorId);
 
             if (authorFromRepo == null)
