@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CourseLibrary.API.Helpers;
+using CourseLibrary.API.Models;
 using CourseLibrary.API.Services;
 using LibraryOfCourses.API.Helpers;
 using LibraryOfCourses.API.Models;
@@ -118,7 +119,7 @@ namespace LibraryOfCourses.API.Controllers
             return Ok();
         }
 
-        [HttpDelete("{authorId}")]
+        [HttpDelete("{authorId}", Name = "DeleteAuthor")]
         public IActionResult DeleteAuthor(Guid authorId)
         {
             var authorFromRepo = _courseLibraryRepository.GetAuthor(authorId);
@@ -174,5 +175,43 @@ namespace LibraryOfCourses.API.Controllers
                     });
             }
         }
+
+        private IEnumerable<LinkDto> CreateLinksForAuthor(Guid authorId, string fields)
+        {
+            var links = new List<LinkDto>();
+
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                links.Add(
+                  new LinkDto(Url.Link("GetAuthor", new { authorId }),
+                  "self",
+                  "GET"));
+            }
+            else
+            {
+                links.Add(
+                  new LinkDto(Url.Link("GetAuthor", new { authorId, fields }),
+                  "self",
+                  "GET"));
+            }
+
+            links.Add(
+               new LinkDto(Url.Link("DeleteAuthor", new { authorId }),
+               "delete_author",
+               "DELETE"));
+
+            links.Add(
+                new LinkDto(Url.Link("CreateCourseForAuthor", new { authorId }),
+                "create_course_for_author",
+                "POST"));
+
+            links.Add(
+               new LinkDto(Url.Link("GetCoursesForAuthor", new { authorId }),
+               "courses",
+               "GET"));
+
+            return links;
+        }
+
     }
 }
