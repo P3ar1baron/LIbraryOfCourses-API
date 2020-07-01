@@ -95,7 +95,15 @@ namespace LibraryOfCourses.API.Controllers
                 return NotFound();
             }
 
-            return  Ok(_mapper.Map<AuthorDto>(authorFromRepo).ShapeData(fields));
+            var links = CreateLinksForAuthor(authorId, fields);
+
+            var linkedResourceToReturn =
+                _mapper.Map<AuthorDto>(authorFromRepo).ShapeData(fields)
+                as IDictionary<string, object>;
+
+            linkedResourceToReturn.Add("links", links);
+
+            return  Ok(linkedResourceToReturn);
         }
 
         [HttpPost]
