@@ -9,6 +9,7 @@ using LibraryOfCourses.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 
 namespace LibraryOfCourses.API.Controllers
@@ -76,7 +77,19 @@ namespace LibraryOfCourses.API.Controllers
             Response.Headers.Add("X-Pagination",
                 JsonSerializer.Serialize(paginationMetadata));
 
-            return  Ok(_mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo));
+            var links = CreateLinksForAuthors(authorsResourceParameters);
+
+            var shapedAuthors = _mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo)
+                                .ShapeData(authorsResourceParameters.Fields);
+
+            var shapedAuthorWithLinks = shapedAuthors.Select(author =>
+            {
+                var authorAsDictionary = author as IDictionary<string, object>;
+                var authorLinks = CreateLinksForAuthor((Guid)authorAsDictionary[])
+            });
+
+            return  Ok(_mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo)
+                .ShapeData(authorsResourceParameters.Fields));
         }
 
         [HttpGet("{authorId:guid}", Name = "GetAuthor")]
